@@ -1,6 +1,6 @@
 import { SyncAsync } from '@angular/compiler/src/util';
 import { Component , OnInit} from '@angular/core';
-import { FormControl,  FormGroup,  Validators } from '@angular/forms';
+import { FormControl,  FormGroup,  Validators , FormBuilder} from '@angular/forms';
 @Component({
   selector: 'app-basic-form',
   templateUrl: './basic-form.html',
@@ -8,29 +8,38 @@ import { FormControl,  FormGroup,  Validators } from '@angular/forms';
 })
 export class BasicFormComponent implements OnInit{
 
-form=new FormGroup({
-  name:new FormControl('', [Validators.required, Validators.maxLength(10) ]),
-  email:new FormControl(''),
-  phone:new FormControl(''),
-  color:new FormControl('#000000'),
-  date:new FormControl(''),
-  age:new FormControl(12),
-  category:new FormControl(),
-  tag:new FormControl(),
+form: FormGroup
 
-  agree:new FormControl(false),
-  gender:new FormControl(''),
-  zone:new FormControl('')
-})
-
-
-constructor(){}
+constructor(
+  private formBuilder: FormBuilder
+){}
 
 ngOnInit(): void {
     this.nameField?.valueChanges.subscribe(value=>{
       console.log(value)
     });
 }
+  private buildForm(){
+this.form= this.formBuilder.group({
+  name:[Validators.required, Validators.maxLength(10) ],
+  email:  [''],
+  phone:  [''],
+  color: ['#000000'],
+  date:  [''],
+  age: (12),
+  category:  [''],
+  tag:  [''],
+  agree: (false),
+  gender:  [''],
+  zone:  ['']
+})
+  }
+ 	save(event: Event): void {
+		this.form.markAllAsTouched()
+		if (this.form.invalid) { return }
+		console.log(this.form.value)
+	}
+
 getNameValue(){
   console.log(this.nameField?.value);
 }
@@ -74,11 +83,7 @@ getNameFieldInvalid(){
    get zoneField(){
   return this.form.get('zone');
  }
- 	save(event: Event): void {
-		this.form.markAllAsTouched()
-		if (this.form.invalid) { return }
-		console.log(this.form.value)
-	}
+
 
 }
 
